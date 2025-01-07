@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Clientes</title>
+    <link rel="stylesheet" href="../assets/styles/styles_cliente.css"> 
+</head>
+<body>
+    <div class="container">
+        <button id="volver-atras" class="back-button">Volver</button>
+        <h1>Listado de Clientes</h1>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>DNI</th>
+                        <th>País</th>
+                        <th>Idioma</th>
+                    </tr>
+                </thead>
+                <tbody id="clientes-list"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            cargarClientes();
+
+            function cargarClientes() {
+                $.ajax({
+                    url: 'http://127.0.0.1/electron-app/php/obtener_clientes.php', 
+                    type: 'GET',
+                    success: function (response) {
+                        console.log("Respuesta recibida:", response); 
+
+                        try {
+                            var clientes = JSON.parse(response);
+                            var clientesHTML = '';
+
+                            if (clientes.length > 0) {
+                                for (var i = 0; i < clientes.length; i++) {
+                                    clientesHTML += `
+                                        <tr>
+                                            <td>${clientes[i].email}</td>
+                                            <td>${clientes[i].dni}</td>
+                                            <td>${clientes[i].country}</td>
+                                            <td>${clientes[i].language}</td>
+                                        </tr>
+                                    `;
+                                }
+                            } else {
+                                clientesHTML = '<tr><td colspan="4">No se encontraron clientes registrados.</td></tr>';
+                            }
+
+                            $('#clientes-list').html(clientesHTML);
+                        } catch (error) {
+                            console.error("Error al procesar el JSON:", error);
+                            $('#clientes-list').html('<tr><td colspan="4">Error al procesar los datos.</td></tr>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error en la solicitud AJAX:", error);
+                        $('#clientes-list').html('<tr><td colspan="4">Hubo un error al cargar los clientes.</td></tr>');
+                    }
+                });
+
+                $('#volver-atras').click(function () {
+                    window.history.back(); 
+                });
+            }
+        });
+    </script>
+</body>
+</html>

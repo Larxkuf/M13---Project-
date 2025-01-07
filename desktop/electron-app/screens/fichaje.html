@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fichaje</title>
+    <link rel="stylesheet" href="../assets/styles/styles_fichaje.css">
+</head>
+<body>
+
+    <div class="container">
+        <button id="volver-atras" class="back-button">Volver</button>
+
+        <div class="form-container">
+            <h1>Fichaje</h1>
+            <p>Introduce tu número de tarjeta para fichar</p>
+            
+            <form id="fichaje-form">
+                <input type="text" id="numero_tarjeta" name="numero_tarjeta" placeholder="Número de tarjeta" required>
+                <button type="submit">Fichar</button>
+            </form>
+
+            <br />
+
+            <div id="mensaje" class="message"></div>
+        </div>
+
+        <div class="table-container">
+            <h2>Fichajes Realizados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fichaje</th>
+                    </tr>
+                </thead>
+                <tbody id="fichajes-list">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            cargarFichajes();
+
+            $('#fichaje-form').submit(function(e) {
+                e.preventDefault(); 
+                var numero_tarjeta = $('#numero_tarjeta').val(); 
+                
+                $.ajax({
+                    url: '../php/fichajes.php', 
+                    type: 'POST',
+                    data: { numero_tarjeta: numero_tarjeta },
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        
+                        if (data.mensaje) {
+                            $('#mensaje').html(data.mensaje);
+                        }
+
+                        if (data.mensaje === "Fichaje realizado con éxito") {
+                            cargarFichajes(); 
+                        }
+                    },
+                    error: function() {
+                        $('#mensaje').html('Hubo un error al procesar la solicitud.');
+                    }
+                });
+            });
+
+            function cargarFichajes() {
+                $.ajax({
+                    url: '../php/fichajes.php', 
+                    type: 'GET', 
+                    success: function(response) {
+                        var fichajes = JSON.parse(response);
+                        var fichajesHTML = '';
+
+                        if (fichajes.length > 0 && !fichajes[0].mensaje) {
+                            for (var i = 0; i < fichajes.length; i++) {
+                                fichajesHTML += '<tr><td>' + 
+                                    ' | Fecha/Hora: ' + fichajes[i].fecha_hora + 
+                                    '</td></tr>';
+                            }
+                        } else {
+                            fichajesHTML = '<tr><td colspan="1">' + fichajes[0].mensaje + '</td></tr>';
+                        }
+
+                        $('#fichajes-list').html(fichajesHTML); 
+                    },
+                    error: function() {
+                        $('#fichajes-list').html('<tr><td colspan="1">Hubo un error al cargar los fichajes.</td></tr>');
+                    }
+                });
+            }
+
+            $('#volver-atras').click(function() {
+                window.history.back();
+            });
+        });
+    </script>
+</body>
+</html>

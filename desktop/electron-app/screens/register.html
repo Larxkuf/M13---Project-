@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Trabajador</title>
+    <link rel="stylesheet" href="../assets/styles/style_register.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Registrar nuevo trabajador</h1>
+        <?php if (!empty($error_message)): ?>
+            <div class="error"><?php echo $error_message; ?></div>
+        <?php endif; ?>
+        <form action="http://127.0.0.1/electron-app/php/register.php" method="POST">
+            <input type="text" name="nombre" placeholder="Nombre" required>
+            <input type="email" name="email" placeholder="Correo Electrónico" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <input type="password" name="confirm_password" placeholder="Confirmar Contraseña" required>
+            <input type="text" name="dni" placeholder="DNI" required>
+            <select name="role" required>
+                <option value="admin">Administrador</option>
+                <option value="employee">Empleado</option>
+            </select>
+            <button type="submit">Registrar</button>
+        </form>
+        
+        <a href="index.html">
+            <button type="button">Volver</button>
+        </a>
+    </div>
+</body>
+</html>

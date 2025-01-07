@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos del Proveedor</title>
+    <link rel="stylesheet" href="../assets/styles/styles_prov2.css">
+</head>
+<body>
+    <div class="container">
+        <button id="volver-atras" class="back-button">Volver</button>
+        <h1>Productos del Proveedor</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Producto</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Talla</th>
+                    <th>Imagen</th>
+                    <th>Añadir Stock</th>
+                </tr>
+            </thead>
+            <tbody id="productos-list"></tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var proveedorId = getParameterByName('id');
+            console.log("Proveedor ID:", proveedorId); 
+            if (proveedorId) {
+                cargarProductos(proveedorId);
+            } else {
+                alert("ID de proveedor no proporcionado.");
+            }
+
+            function getParameterByName(name) {
+                var url = window.location.href;
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+                var results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
+            function cargarProductos(proveedorId) {
+                $.ajax({
+                    url: 'http://127.0.0.1/electron-app/php/obtener_productos_por_proveedor.php?id=' + proveedorId,
+                    type: 'GET',
+                    success: function(response, status, xhr) {
+                        console.log("Respuesta recibida:", response);
+                        console.log("Estado de la solicitud:", status);
+
+                        try {
+                            var productos = JSON.parse(response);
+
+                            var productosHTML = '';
+                            if (productos.length > 0) {
+                                for (var i = 0; i < productos.length; i++) {
+                                    productosHTML += `
+                                        <tr>
+                                            <td>${productos[i].id}</td>
+                                            <td>${productos[i].nombre}</td>
+                                            <td>${productos[i].precio} €</td>
+                                            <td>${productos[i].cantidad}</td>
+                                            <td>${productos[i].talla}</td>
+                                            <td><img src="../assets/images/${productos[i].imagen}" alt="${productos[i].nombre}" class="producto-imagen"></td>
+                                            <td>
+                                                <input type="number" id="cantidad_${productos[i].id}" min="1" value="1">
+                                                <button class="btn-add" data-producto-id="${productos[i].id}">Añadir</button>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }
+                            } else {
+                                productosHTML = '<tr><td colspan="7">No se encontraron productos para este proveedor.</td></tr>';
+                            }
+                            $('#productos-list').html(productosHTML);
+                        } catch (error) {
+                            console.error("Error al procesar el JSON:", error);
+                            $('#productos-list').html('<tr><td colspan="7">Error al cargar los productos.</td></tr>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error en la solicitud AJAX:", error);
+                        console.log("Detalles del error:", xhr.responseText);
+                        $('#productos-list').html('<tr><td colspan="7">Hubo un error al cargar los productos.</td></tr>');
+                    }
+                });
+            }
+
+            $(document).on('click', '.btn-add', function() {
+                var productoId = $(this).data('producto-id');
+                var cantidad = $('#cantidad_' + productoId).val();
+                var talla = $(this).closest('tr').find('.talla').text(); 
+
+                $.ajax({
+                    url: 'http://127.0.0.1/electron-app/php/obtener_productos_por_proveedor.php',
+                    type: 'POST',
+                    data: {
+                        producto_id: productoId,
+                        cantidad: cantidad,
+                        talla: talla 
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        alert('Stock actualizado con éxito');
+                        cargarProductos(proveedorId); 
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error en la solicitud AJAX:", error);
+                        alert("Hubo un error al actualizar el stock.");
+                    }
+                });
+            });
+
+            $('#volver-atras').click(function() {
+                window.history.back();
+            });
+        });
+    </script>
+</body>
+</html>

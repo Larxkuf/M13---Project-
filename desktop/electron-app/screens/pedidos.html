@@ -1,0 +1,93 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos</title>
+    <link rel="stylesheet" href="../assets/styles/styles_pedidos.css">
+</head>
+<body>
+    <div class="container">
+        <button id="volver-atras" class="back-button">Volver</button>
+        <h1>Listado de Compras</h1>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Comprador</th>
+                        <th>Método de Pago</th>
+                        <th>Método de Envío</th>
+                        <th>Dirección</th>
+                        <th>Fecha de Compra</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="compras-list"></tbody>
+            </table>
+        </div>
+    </div>
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            cargarCompras();
+
+            function cargarCompras() {
+                $.ajax({
+                    url: 'http://127.0.0.1/electron-app/php/obtener_compras.php', 
+                    type: 'GET',
+                    success: function(response) {
+                        console.log("Respuesta recibida:", response); 
+
+                        try {
+                            var compras = JSON.parse(response); 
+
+                            console.log("Compras procesadas:", compras);
+
+                            var comprasHTML = '';
+                            if (compras.length > 0) {
+                                for (var i = 0; i < compras.length; i++) {
+                                    var fecha = new Date(compras[i].fecha_compra);
+                                    var fechaFormateada = fecha.toLocaleDateString('es-ES');
+                                    comprasHTML += `
+                                        <tr>
+                                            <td>${compras[i].user_id}</td>
+                                            <td>${compras[i].metodo_pago}</td>
+                                            <td>${compras[i].metodo_envio}</td>
+                                            <td>${compras[i].direccion || 'N/A'}</td>
+                                            <td>${fechaFormateada}</td>
+                                            <td>${compras[i].total} €</td>
+                                            <td><button class="ver-detalles" data-id="${compras[i].user_id}">Ver detalles</button></td>
+                                        </tr>
+                                    `;
+                                }
+                            } else {
+                                comprasHTML = '<tr><td colspan="7">No se encontraron compras registradas.</td></tr>';
+                            }
+                            $('#compras-list').html(comprasHTML);
+                        } catch (error) {
+                            console.error("Error al procesar el JSON:", error);
+                            $('#compras-list').html('<tr><td colspan="7">Error al procesar los datos.</td></tr>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error en la solicitud AJAX:", error); 
+                        $('#compras-list').html('<tr><td colspan="7">Hubo un error al cargar las compras.</td></tr>');
+                    }
+                });
+
+                $('#volver-atras').click(function() {
+                    window.history.back(); 
+                });
+
+                $(document).on('click', '.ver-detalles', function() {
+                    var compraId = $(this).data('id');
+                    window.location.href = `detalle_prod.html?id=${compraId}`;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

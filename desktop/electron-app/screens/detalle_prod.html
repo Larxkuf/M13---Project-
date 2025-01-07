@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de la Compra</title>
+    <link rel="stylesheet" href="../assets/styles/styles_detalle_prod.css">
+</head>
+<body>
+    <div class="container">
+        <button id="volver-atras" class="back-button">Volver</button>
+        <h1>Detalles de la Compra</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Compra ID</th>
+                    <th>Carrito ID</th>
+                    <th>Talla</th>
+                    <th>Cantidad</th>
+                    <th>Precio Total</th>
+                    <th>Producto ID</th>
+                    <th>User ID</th>
+                </tr>
+            </thead>
+            <tbody id="detalle-list"></tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var compraId = urlParams.get('id'); 
+
+            if (compraId) {
+                cargarDetallesCompra(compraId);
+            } else {
+                alert("ID de compra no válido.");
+            }
+
+            function cargarDetallesCompra(compraId) {
+                $.ajax({
+                    url: 'http://127.0.0.1/electron-app/php/detalle_prod.php', 
+                    type: 'GET',
+                    data: { id: compraId }, 
+                    success: function(response) {
+                        console.log("Detalles de la compra:", response);
+
+                        try {
+                            var detalles = JSON.parse(response);
+                            var detallesHTML = '';
+                            if (detalles.length > 0) {
+                                for (var i = 0; i < detalles.length; i++) {
+                                    detallesHTML += `
+                                        <tr>
+                                            <td>${detalles[i].id}</td>
+                                            <td>${detalles[i].compra_id}</td>
+                                            <td>${detalles[i].carrito_id}</td>
+                                            <td>${detalles[i].talla}</td>
+                                            <td>${detalles[i].cantidad}</td>
+                                            <td>${detalles[i].precio_total} €</td>
+                                            <td>${detalles[i].producto_id}</td>
+                                            <td>${detalles[i].user_id}</td>
+                                        </tr>
+                                    `;
+                                }
+                            } else {
+                                detallesHTML = '<tr><td colspan="8">No se encontraron detalles para esta compra.</td></tr>';
+                            }
+                            $('#detalle-list').html(detallesHTML);
+                        } catch (error) {
+                            console.error("Error al procesar los detalles:", error);
+                            alert("Error al cargar los detalles.");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error en la solicitud AJAX de detalles:", error);
+                        alert("Hubo un error al cargar los detalles de la compra.");
+                    }
+                });
+            }
+
+            $('#volver-atras').click(function() {
+                window.history.back(); 
+            });
+        });
+    </script>
+</body>
+</html>

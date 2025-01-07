@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proveedores</title>
+    <link rel="stylesheet" href="../assets/styles/styles_prov.css">
+</head>
+<body>
+
+    <div class="container">
+       <button id="volver-atras" class="back-button">Volver</button>
+
+        <h1>Listado de Proveedores</h1>
+        <div class="proveedor-container" id="proveedor-lista">
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            cargarProveedores();
+
+            function cargarProveedores() {
+                $.ajax({
+                    url: '../php/obtener_proveedores.php', 
+                    type: 'GET',
+                    success: function(response) {
+                        try {
+                            var proveedores = JSON.parse(response);
+
+                            var proveedoresHTML = '';
+                            if (proveedores.length > 0) {
+                                for (var i = 0; i < proveedores.length; i++) {
+                                    proveedoresHTML += `
+                                        <div class="proveedor">
+                                            <img src="../assets/images/${proveedores[i].imagen}" alt="${proveedores[i].nombre}" clas="imagen">
+                                            <h3>${proveedores[i].nombre}</h3>
+                                            <p>${proveedores[i].ubicacion}</p>
+                                            <button class="ver-productos" data-id="${proveedores[i].id}">Ver productos</button>
+                                        </div>
+                                    `;
+                                }
+                            } else {
+                                proveedoresHTML = '<p>No se encontraron proveedores.</p>';
+                            }
+                            $('#proveedor-lista').html(proveedoresHTML);
+                        } catch (error) {
+                            console.error("Error al procesar el JSON:", error);
+                            $('#proveedor-lista').html('<p>Error al cargar los proveedores.</p>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error en la solicitud AJAX:", error);
+                        $('#proveedor-lista').html('<p>Hubo un error al cargar los proveedores.</p>');
+                    }
+                });
+                $('#volver-atras').click(function() {
+                    window.history.back(); 
+                });
+                $(document).on('click', '.ver-productos', function() {
+                    var proveedorId = $(this).data('id');
+                    window.location.href = 'proveedor_productos.html?id=' + proveedorId; 
+                });
+            }
+        });
+    </script>
+</body>
+</html>

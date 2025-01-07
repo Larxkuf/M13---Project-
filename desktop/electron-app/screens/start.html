@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/styles/styles_start.css">
+    <title>Start</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body id="body-start" class="row">
+    <div class="container">
+        <div class="button-container">
+            <div class="button-card" id="fichaje-button">
+                <img src="../assets/images/contract.png" alt="Fichaje" class="button-image">
+                <h3>Fichaje</h3>
+            </div>
+            <div class="button-card" id="pedidos-button">
+                <img src="../assets/images/order.png" alt="Pedidos" class="button-image">
+                <h3>Pedidos</h3>
+            </div>
+            <div class="button-card" id="provedores-button">
+                <img src="../assets/images/supplier.png" alt="Proveedores" class="button-image">
+                <h3>Proveedores</h3>
+            </div>
+            <div class="button-card" id="provedores-clientes">
+                <img src="../assets/images/best-employee.png" alt="Clientes" class="button-image">
+                <h3>Clientes</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="container2">
+        <div class="profile-container">
+            <div class="profile-picture" id="profile-picture">
+                <img src="" alt="Imagen de perfil" class="profile-img" id="profile-img">
+            </div>
+        </div>
+        
+        <div class="bienvenido-container">
+            <h2>Bienvenido, <span id="user-name"></span></h2>
+            <p><strong>Correo:</strong> <span id="user-email"></span></p>
+            <p><strong>Puesto:</strong> <span id="user-role"></span></p>
+        </div>
+        <a href="index.html">Cerrar sesión</a>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: 'http://127.0.0.1/electron-app/php/start.php', 
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.error) {
+                        alert(response.error);
+                    } else {
+                        $('#user-name').text(response.nombre);
+                        $('#user-email').text(response.email);
+                        $('#user-role').text(response.role);
+                        
+                        var profilePicture = response.profile_picture ? response.profile_picture : 'default-profile.jpg';
+                        $('#profile-img').attr('src', '../assets/images/' + profilePicture);
+                    }
+                },
+                error: function() {
+                    alert('Error al obtener los datos');
+                }
+            });
+        });
+
+        document.getElementById('fichaje-button').addEventListener('click', () => {
+            window.location.href = 'fichaje.html';
+        });
+    
+        document.getElementById('pedidos-button').addEventListener('click', () => {
+            window.location.href = 'pedidos.html';
+        });
+        document.getElementById('provedores-button').addEventListener('click', () => {
+            window.location.href = 'proveedores.html';
+        });
+        document.getElementById('provedores-clientes').addEventListener('click', () => {
+            window.location.href = 'clientes.html';
+        });
+    </script>
+</body>
+</html>
