@@ -1,0 +1,177 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #D1E3F1;  
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    width: 100%;
+    max-width: 1100px;
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: 2px solid #A7C7E7; 
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #355C7D;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.proveedor-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));  
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.proveedor {
+    background-color: #A8C8E8; 
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #A7C7E7; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.proveedor h3 {
+    font-size: 1.3rem;
+    color: #355C7D;  
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.proveedor p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.proveedor button {
+    padding: 10px 20px;
+    background-color: #355C7D; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.proveedor button:hover {
+    background-color: #d5e5f5;
+    color: rgb(1, 61, 131);
+
+}
+
+.proveedor-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.proveedor-container::-webkit-scrollbar-track {
+    background: #D1E3F1;
+    border-radius: 10px;
+}
+
+.proveedor-container::-webkit-scrollbar-thumb {
+    background: #6D8FBB; 
+    border-radius: 10px;
+    border: 2px solid #D1E3F1;
+}
+
+.proveedor-container::-webkit-scrollbar-thumb:hover {
+    background: #5A6F91; 
+}
+
+.no-proveedores {
+    text-align: center;
+    color: #888;
+    font-size: 1.2rem;
+    margin-top: 30px;
+}
+
+.proveedor-card {
+    background-color: #A8C8E8;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #A7C7E7;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+
+@media (max-width: 1500px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .container {
+        max-width: 700px;
+        padding: 20px;
+    }
+
+    .proveedor-container {
+        gap: 15px;
+        max-height: 500px;
+    }
+
+    .proveedor {
+        padding: 15px;
+    }
+
+    .proveedor h3 {
+        font-size: 1.2rem;
+    }
+
+    .proveedor button {
+        font-size: 1rem;
+    }
+}
+
+img{
+    max-width: 100px;
+}
+
+
+
+.back-button {
+    padding: 5px 15px;
+    background-color: #1A4A75; 
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    justify-content: end;
+}
+
+.back-button:hover {
+    background-color: #3D6F94; 
+}

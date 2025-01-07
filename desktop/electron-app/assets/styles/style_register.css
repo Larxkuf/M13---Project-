@@ -1,0 +1,115 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #E8F4FD; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 450px; 
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.0rem;
+    color: #4682B4; /* Azul */
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #F6F8FA;
+    color: #333;
+}
+
+button {
+    width: 80%;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: #4682B4; 
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #5A9BCF; 
+}
+
+input:focus, select:focus {
+    border-color: #4682B4;
+    outline: none;
+}
+
+button[type="button"] {
+    background-color: #2664a6;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 30%;
+    font-size: 1.1rem;
+}
+
+button[type="button"]:hover {
+    background-color: #0056b3;
+}
+
+
+@media (max-width: 1524px) {
+    .container {
+        max-width: 400px;
+        padding: 25px;
+    }
+    h1 {
+        font-size: 1.8rem; 
+    }
+    input, select, button {
+        font-size: 0.9rem; 
+        padding: 10px; 
+    }
+}
+
+@media (max-width: 1000px) {
+    .container {
+        max-width: 350px; 
+        padding: 20px;
+    }
+    h1 {
+        font-size: 1.6rem;
+    }
+    input, select, button {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+    button {
+        width: 85%;
+    }
+    button[type="button"] {
+        width: 40%;
+    }
+}
